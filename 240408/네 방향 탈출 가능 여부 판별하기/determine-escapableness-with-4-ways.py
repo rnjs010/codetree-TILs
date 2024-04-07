@@ -1,40 +1,20 @@
 from collections import deque
 
-n, m = tuple(map(int, input().split()))
-
-a = [
-    list(map(int, input().split()))
-    for _ in range(n)
-]
-
-visited = [
-    [False for _ in range(m)]
-    for _ in range(n)
-]
+n, m = map(int, input().split())
+board = [list(map(int, input().split())) for _ in range(n)]
+dx, dy = [1, -1, 0, 0], [0, 0, 1, -1]
 
 q = deque()
-
-def in_range(x, y):
-    return 0 <= x and x < n and 0 <= y and y < m
-
-def can_go(x, y):
-    return in_range(x, y) and a[x][y] and not visited[x][y]
-
-
+q.append((0, 0))
+board[0][0] = 3
 def bfs():
     while q:
         x, y = q.popleft()
-        dxs, dys = [0, 1, 0, -1], [1, 0, -1, 0]
-        for dx, dy in zip(dxs, dys):
-            new_x, new_y = x + dx, y + dy
-            if can_go(new_x, new_y):
-                q.append((new_x, new_y))
-                visited[new_x][new_y] = True
-
-                
-q.append((0, 0))
-visited[0][0] = True
+        for i in range(4):
+            nx, ny = x + dx[i], y + dy[i]
+            if 0 <= nx < n and 0 <= ny < m and board[nx][ny] == 1:
+                board[nx][ny] = 3
+                q.append((nx, ny))
 
 bfs()
-answer = 1 if visited[n - 1][m - 1] else 0
-print(answer)
+print(1 if board[n-1][m-1] == 3 else 0)
