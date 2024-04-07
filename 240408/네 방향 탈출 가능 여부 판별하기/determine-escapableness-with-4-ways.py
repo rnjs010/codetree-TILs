@@ -12,9 +12,7 @@ while q:
     board[x][y] = 3
     for i in range(4):
         nx, ny = x + dx[i], y + dy[i]
-        if nx == n - 1 and ny == m - 1:
-            ans = 1
         if 0 <= nx < n and 0 <= ny < m and board[nx][ny] == 1:
             q.append((nx, ny))
 
-print(ans)
+print(1 if board[n-1][m-1] == 3 else 0)
