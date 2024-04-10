@@ -33,7 +33,7 @@ for _ in range(Q):
         pos, name, eat = int(q[2]), q[3], int(q[4])
         people[name] = [pos, eat]
         eating()
-        
+
     else:
         if people: eating()
 
@@ -43,7 +43,8 @@ for _ in range(Q):
 
         e_cnt = 0
         for i in range(L):
-            for j in table[i].items():
-                e_cnt += j[1]
+            if table[i]:
+                for j in table[i].items():
+                    e_cnt += j[1]
 
         print(p_cnt, e_cnt)
