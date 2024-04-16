@@ -6,7 +6,6 @@ pack = deque([*map(int, input().split())])
 
 dx, dy = [-1, 0, 1, 0], [0, 1, 0, -1]
 visited = [[0] * 5 for _ in range(5)]
-
 change_idx = []
 
 
@@ -46,35 +45,35 @@ def get_pack(b_map):    # 얻을 수 있는 가치 총합
     return ans
 
 
-def rotate90(b_map, sx, sy):
+def rotate90(sx, sy, case):
+    temp_map = [[0] * 5 for _ in range(5)]
+    for x in range(5):
+        for y in range(5):
+            temp_map[x][y] = board[x][y]
+
     for x in range(sx, sx + 3):
         for y in range(sy, sy + 3):
             ox, oy = x - sx, y - sy
-            rx, ry = oy, 3 - ox - 1
-            b_map[rx + sx][ry + sy] = board[x][y]
-    return get_pack(b_map), b_map
+            if case == 0: rx, ry = oy, 3 - ox - 1
+            elif case == 1: rx, ry = 3 - ox - 1, 3 - oy - 1
+            else: rx, ry = 3 - oy - 1, ox
+            temp_map[rx + sx][ry + sy] = board[x][y]
+    return get_pack(temp_map), temp_map
 
 
 def max_get_map():
     max_val = 0
     new_map = [[0] * 5 for _ in range(5)]
-    temp_map = [[0] * 5 for _ in range(5)]
-    for i in range(0, 3):
-        for j in range(0, 3):
-
-            for x in range(5):
-                for y in range(5):
-                    temp_map[x][y] = board[x][y]
-            for _ in range(3):
-                val, temp = rotate90(temp_map, i, j)
-                for x in range(5):
-                    for y in range(5):
-                        temp_map[x][y] = temp[x][y]
+    # temp_map = [[0] * 5 for _ in range(5)]
+    for case in range(3):
+        for i in range(0, 3):
+            for j in range(0, 3):
+                val, temp = rotate90(i, j, case)
                 if val > max_val:
                     max_val = val
                     for x in range(5):
                         for y in range(5):
-                            new_map[x][y] = temp_map[x][y]
+                            new_map[x][y] = temp[x][y]
 
     if not max_val:
         return False
@@ -95,8 +94,9 @@ for _ in range(K):
     result = 0
     if max_get_map():
         while True:
-            if not get_pack(board): break
-            result += get_pack(board)
+            k = get_pack(board)
+            if k == 0: break
+            result += k
             change_pack()
         if result > 0:
             print(result, end=' ')
