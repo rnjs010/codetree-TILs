@@ -45,7 +45,7 @@ def get_pack(b_map):    # 얻을 수 있는 가치 총합
     return ans
 
 
-def rotate90(sx, sy, case):
+def rotate(sx, sy, case):
     temp_map = [[0] * 5 for _ in range(5)]
     for x in range(5):
         for y in range(5):
@@ -66,9 +66,9 @@ def max_get_map():
     new_map = [[0] * 5 for _ in range(5)]
     # temp_map = [[0] * 5 for _ in range(5)]
     for case in range(3):
-        for i in range(0, 3):
-            for j in range(0, 3):
-                val, temp = rotate90(i, j, case)
+        for j in range(0, 3):
+            for i in range(0, 3):
+                val, temp = rotate(i, j, case)
                 if val > max_val:
                     max_val = val
                     for x in range(5):
@@ -100,3 +100,5 @@ for _ in range(K):
             change_pack()
         if result > 0:
             print(result, end=' ')
+    else:
+        break
