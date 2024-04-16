@@ -1,104 +1,95 @@
 from collections import deque
 
-K, M = map(int, input().split())
-board = [list(map(int, input().split())) for _ in range(5)]
-pack = deque([*map(int, input().split())])
+N_large = 5
+N_small = 3
 
-dx, dy = [-1, 0, 1, 0], [0, 1, 0, -1]
-visited = [[0] * 5 for _ in range(5)]
-change_idx = []
+class Board:
+    def __init__(self):
+        self.a = [[0 for _ in range(N_large)] for _ in range(N_large)]
 
+    def in_range(self, y, x):
+        return 0 <= y < N_large and 0 <= x < N_large
 
-def bfs(b_map, i, j):
-    q = deque([(i, j)])
-    visited[i][j] = 1
-    cnt = 1
-    while q:
-        x, y = q.popleft()
-        for d in range(4):
-            nx, ny = x + dx[d], y + dy[d]
-            if 0 <= nx < 5 and 0 <= ny < 5 and visited[nx][ny] == 0:
-                if b_map[x][y] == b_map[nx][ny]:
-                    cnt += 1
-                    change_idx.append((nx, ny))
-                    visited[nx][ny] = 1
-                    q.append((nx, ny))
+    def rotate(self, sy, sx, cnt):
+        result = Board()
+        result.a = [row[:] for row in self.a]
+        for _ in range(cnt):
+            tmp = result.a[sy + 0][sx + 2]
+            result.a[sy + 0][sx + 2] = result.a[sy + 0][sx + 0]
+            result.a[sy + 0][sx + 0] = result.a[sy + 2][sx + 0]
+            result.a[sy + 2][sx + 0] = result.a[sy + 2][sx + 2]
+            result.a[sy + 2][sx + 2] = tmp
+            tmp = result.a[sy + 1][sx + 2]
+            result.a[sy + 1][sx + 2] = result.a[sy + 0][sx + 1]
+            result.a[sy + 0][sx + 1] = result.a[sy + 1][sx + 0]
+            result.a[sy + 1][sx + 0] = result.a[sy + 2][sx + 1]
+            result.a[sy + 2][sx + 1] = tmp
+        return result
 
-    if cnt == 2: change_idx.pop()
-    return cnt if cnt >= 3 else 0
+    def cal_score(self):
+        score = 0
+        visit = [[False for _ in range(N_large)] for _ in range(N_large)]
+        dy, dx = [0, 1, 0, -1], [1, 0, -1, 0]
 
+        for i in range(N_large):
+            for j in range(N_large):
+                if not visit[i][j]:
+                    q, trace = deque([(i, j)]), deque([(i, j)])
+                    visit[i][j] = True
+                    while q:
+                        cur = q.popleft()
+                        for k in range(4):
+                            ny, nx = cur[0] + dy[k], cur[1] + dx[k]
+                            if self.in_range(ny, nx) and self.a[ny][nx] == self.a[cur[0]][cur[1]] and not visit[ny][nx]:
+                                q.append((ny, nx))
+                                trace.append((ny, nx))
+                                visit[ny][nx] = True
 
-def get_pack(b_map):    # 얻을 수 있는 가치 총합
-    # visited 초기화
-    for i in range(5):
-        for j in range(5):
-            visited[i][j] = 0
-    change_idx.clear()
-    ans = 0
-    for i in range(5):
-        for j in range(5):
-            if visited[i][j] == 0:
-                get = bfs(b_map, i, j)
-                if get != 0:
-                    ans += get
-                    change_idx.append((i, j))
-    return ans
+                    if len(trace) >= 3:
+                        score += len(trace)
+                        while trace:
+                            t = trace.popleft()
+                            self.a[t[0]][t[1]] = 0
+        return score
 
+    def fill(self, que):
+        for j in range(N_large):
+            for i in reversed(range(N_large)):
+                if self.a[i][j] == 0:
+                    self.a[i][j] = que.popleft()
 
-def rotate(sx, sy, case):
-    temp_map = [[0] * 5 for _ in range(5)]
-    for x in range(5):
-        for y in range(5):
-            temp_map[x][y] = board[x][y]
+def main():
+    K, M = map(int, input().split())
+    board = Board()
+    for i in range(N_large):
+        board.a[i] = list(map(int, input().split()))
+    q = deque()
+    for t in list(map(int, input().split())):
+        q.append(t)
 
-    for x in range(sx, sx + 3):
-        for y in range(sy, sy + 3):
-            ox, oy = x - sx, y - sy
-            if case == 0: rx, ry = oy, 3 - ox - 1
-            elif case == 1: rx, ry = 3 - ox - 1, 3 - oy - 1
-            else: rx, ry = 3 - oy - 1, ox
-            temp_map[rx + sx][ry + sy] = board[x][y]
-    return get_pack(temp_map), temp_map
+    for _ in range(K):
+        maxScore = 0
+        maxScoreBoard = None
+        for cnt in range(1, 4):
+            for sx in range(N_large - N_small + 1):
+                for sy in range(N_large - N_small + 1):
+                    rotated = board.rotate(sy, sx, cnt)
+                    score = rotated.cal_score()
+                    if maxScore < score:
+                        maxScore = score
+                        maxScoreBoard = rotated
 
-
-def max_get_map():
-    max_val = 0
-    new_map = [[0] * 5 for _ in range(5)]
-    # temp_map = [[0] * 5 for _ in range(5)]
-    for case in range(3):
-        for j in range(0, 3):
-            for i in range(0, 3):
-                val, temp = rotate(i, j, case)
-                if val > max_val:
-                    max_val = val
-                    for x in range(5):
-                        for y in range(5):
-                            new_map[x][y] = temp[x][y]
-
-    if not max_val:
-        return False
-    else:
-        for x in range(5):
-            for y in range(5):
-                board[x][y] = new_map[x][y]
-        return True
-
-
-def change_pack():
-    change_idx.sort(key= lambda x: (x[1], -x[0]))
-    for x, y in change_idx:
-        board[x][y] = pack.popleft()
-
-
-for _ in range(K):
-    result = 0
-    if max_get_map():
+        if maxScoreBoard is None:
+            break
+        board = maxScoreBoard
         while True:
-            k = get_pack(board)
-            if k == 0: break
-            result += k
-            change_pack()
-        if result > 0:
-            print(result, end=' ')
-    else:
-        break
+            board.fill(q)
+            newScore = board.cal_score()
+            if newScore == 0:
+                break
+            maxScore += newScore
+
+        print(maxScore, end=" ")
+
+if __name__ == '__main__':
+    main()
