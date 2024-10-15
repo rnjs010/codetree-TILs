@@ -4,9 +4,9 @@ import java.util.*;
 public class Main {
     static int R, C, K;
     static int[][] map;
-    static int[] dx = {0, 0, 1, -1}, dy = {1, -1, 0, 0};
+    static int[] dx = {-1, 0, 1, 0}, dy = {0, 1, 0, -1};
     static boolean[][] isExit;
-    static int ans;
+    static int ans = 0;
 
     // 숲 내에 있는지 확인
     public static boolean isRange(int x, int y) {
@@ -69,7 +69,7 @@ public class Main {
             down(x + 1, y - 1, (d+3)%4, id);
         } else if (canMove(x + 1, y + 1)) {
             down(x + 1, y + 1, (d+1)%4, id);
-        } 
+        }
         // 골렘이 더 이상 이동하지 못하는 경우
         else {
             if (!isRange(x - 1, y - 1) || !isRange(x  + 1, y + 1)) {
@@ -93,7 +93,7 @@ public class Main {
         K = Integer.parseInt(st.nextToken());
 
         map = new int[R+3][C];
-
+        isExit = new boolean[R+3][C];
         for (int i = 1; i <= K; i++) {
             st = new StringTokenizer(br.readLine());
             int c = Integer.parseInt(st.nextToken()) - 1;
