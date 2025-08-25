@@ -16,8 +16,8 @@ public class Main {
         for (int i = 0; i < n; i++) {
             boolean happy = false;
             int same = grid[i][0];
-            int cnt = 1;
-            for (int j = 1; j < n; j++) {
+            int cnt = 0;
+            for (int j = 0; j < n; j++) {
                 if (grid[i][j] == same) cnt++;
                 else {
                     same = grid[i][j];
@@ -34,8 +34,8 @@ public class Main {
         for (int j = 0; j < n; j++) {
             boolean happy = false;
             int same = grid[0][j];
-            int cnt = 1;
-            for (int i = 1; i < n; i++) {
+            int cnt = 0;
+            for (int i = 0; i < n; i++) {
                 if (grid[i][j] == same) cnt++;
                 else {
                     same = grid[i][j];
