@@ -17,6 +17,12 @@ public class Main {
         }
         
         ans = Integer.MAX_VALUE;
+        /* 
+           ★ 대칭성 컷팅 : 탐색 횟수 줄이기
+           왜? 백트래킹 돌다가 같은 경우가 나오기 때문에 (ex. ab/cd = cd/ab)
+           첫 번째 원소를 무조건 포함하는 조합들만 구하면, 
+           나머지 조합들은 자동으로 남은 그룹이 됨
+        */
         comb(1, 1, arr[0]);
         System.out.println(ans);
     }
