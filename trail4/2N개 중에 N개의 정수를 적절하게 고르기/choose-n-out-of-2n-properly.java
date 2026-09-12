@@ -16,8 +16,8 @@ public class Main {
             total += arr[i];
         }
         
-        ans = total;
-        comb(0, 0, 0);
+        ans = Integer.MAX_VALUE;
+        comb(1, 1, arr[0]);
         System.out.println(ans);
     }
 
