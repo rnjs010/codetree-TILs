@@ -3,7 +3,7 @@ import java.io.*;
 
 public class Main {
     static int n, m;
-    static int[] arr, output;
+    static int[] arr;
     static int ans = 0;
 
     public static void main(String[] args) throws IOException {
@@ -18,24 +18,18 @@ public class Main {
             arr[i] = Integer.parseInt(st.nextToken());
         }
         
-        output = new int[m];
-        comb(0, 0);
+        comb(0, 0, 0);
         System.out.print(ans);
     }
 
-    static void comb(int idx, int depth) {
+    static void comb(int idx, int depth, int currXOR) {
         if (depth == m) {
-            int t = 0;
-            for (int num: output) {
-                t ^= num;
-            }
-            ans = Math.max(ans, t);
+            ans = Math.max(ans, currXOR);
             return;
         }
 
         for (int i = idx; i < n; i++) {
-            output[depth] = arr[i];
-            comb(i + 1, depth + 1);
+            comb(i + 1, depth + 1, currXOR ^ arr[i]);
         }
     }
 }
