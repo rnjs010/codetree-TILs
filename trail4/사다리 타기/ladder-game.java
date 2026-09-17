@@ -52,6 +52,8 @@ public class Main {
     }
 
     static void func(int idx, int cnt) {
+        if (cnt >= ans) return;  // 가지치기
+
         if (idx == m) {
             int[] sel_res = run(select);
             if (Arrays.equals(all_res, sel_res)) {
@@ -60,10 +62,11 @@ public class Main {
             return;
         }
 
-        select[idx] = true;
+        func(idx + 1, cnt);  // 선택안하는 경우 (이걸 먼저하면 가지치기 확률 상승)
+
+        select[idx] = true;  // 선택하는 경우
         func(idx + 1, cnt + 1);
         select[idx] = false;
-        func(idx + 1, cnt);
     }
 
     static int[] run(boolean[] select) {
@@ -81,7 +84,6 @@ public class Main {
                 res[x] = res[x] ^ res[y];
             }
         }
-
         return res;
     }
 }
