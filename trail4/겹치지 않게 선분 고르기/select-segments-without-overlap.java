@@ -24,17 +24,13 @@ public class Main {
     }
 
     static void func(int idx) {
-        if (idx == n) {
-            ans = Math.max(ans, select.size());
-        }
+        ans = Math.max(ans, select.size());
 
         for (int i = idx; i < n; i++) {
             if (check(i)) {
                 select.add(i);
                 func(i + 1);
                 select.remove(select.size() - 1);
-            } else {
-                func(i + 1);
             }
         }
     }
