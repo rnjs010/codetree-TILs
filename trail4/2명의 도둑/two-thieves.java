@@ -31,7 +31,7 @@ public class Main {
             }
         }
 
-        comb2(0, 0);
+        selectThieves();
         System.out.println(ans);
     }
 
@@ -49,19 +49,18 @@ public class Main {
         comb1(x, y, idx + 1, sum, v);
     }
 
-    static void comb2(int depth, int sum) {
-        if (depth == 2) {
-            ans = Math.max(ans, sum);
-            return;
-        }
-
+    static void selectThieves() {
         for (int i = 0; i < all.size(); i++) {
-            if (depth != 0 && sel[depth - 1][0] == all.get(i)[0] 
-                && Math.abs(sel[depth - 1][1] - all.get(i)[1]) < m) {
+            for (int j = i + 1; j < all.size(); j++) {
+                int[] t1 = all.get(i);
+                int[] t2 = all.get(j);
+                
+                if (t1[0] == t2[0] && Math.abs(t1[1] - t2[1]) < m) {
                     continue;
+                }
+                
+                ans = Math.max(ans, t1[2] + t2[2]);
             }
-            sel[depth] = all.get(i);
-            comb2(depth + 1, sum + all.get(i)[2]);
         }
     }
 }
