@@ -6,7 +6,6 @@ public class Main {
     static int[][] grid;
     static int val, ans;
     static ArrayList<int[]> all = new ArrayList<>();
-    static int[][] sel = new int[2][3];
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -36,16 +35,14 @@ public class Main {
     }
 
     static void comb1(int x, int y, int idx, int sum, int v) {
+        if (sum > c) return;
+
         if (idx == (m + y)) {
             val = Math.max(val, v);
             return;
         }
 
-        int s = sum + grid[x][idx];
-        if (s <= c) {
-            comb1(x, y, idx + 1, s, v + (grid[x][idx] * grid[x][idx]));
-        }
-
+        comb1(x, y, idx + 1, sum + grid[x][idx], v + (grid[x][idx] * grid[x][idx]));
         comb1(x, y, idx + 1, sum, v);
     }
 
