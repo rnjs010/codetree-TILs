@@ -25,16 +25,23 @@ public class Main {
     }
 
     static void perm(int d) {
+        if (ans == k) return;
+
         if (d == n) {
             int cnt = 0;
-            for (int s: res) {
-                if (s >= (m - 1)) cnt++;
+            for (int i = 0; i < k; i++) {
+                if (res[i] >= (m - 1)) cnt++;
             }
             ans = Math.max(ans, cnt);
             return;
         }
 
         for (int i = 0; i < k; i++) {
+            if (res[i] >= m - 1) {
+                perm(d + 1); 
+                continue;
+            }
+
             res[i] += nums[d];
             perm(d + 1);
             res[i] -= nums[d];
