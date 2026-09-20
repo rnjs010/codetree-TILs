@@ -21,19 +21,20 @@ public class Main {
 
     static void perm(int depth) {
         if (depth == n) {
-            print_output();
+            printOutput();
             return;
         }
 
         for (int i = 1; i <= k; i++) {
-            if (depth < 2 || !(output[depth - 1] == output[depth - 2] && output[depth - 1] == i)) {
-                output[depth] = i;
-                perm(depth + 1);
+            if (depth >= 2 && output[depth - 1] == output[depth - 2] && output[depth - 1] == i) {
+                continue; 
             }
+            output[depth] = i;
+            perm(depth + 1);
         }
     }
 
-    static void print_output() {
+    static void printOutput() {
         for (int i = 0; i < n; i++) {
             sb.append(output[i]).append(" ");
         }
