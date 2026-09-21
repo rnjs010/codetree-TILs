@@ -28,7 +28,7 @@ public class Main {
             return;
         }
 
-        for (int i = 1; i <= arr[cur]; i++) {
+        for (int i = arr[cur]; i >= 1; i--) {
             jump(cur + i, cnt + 1);
         }
     }
