@@ -25,6 +25,8 @@ public class Main {
     }
 
     static void perm(int row, int num, int visit) {
+        if (num <= ans) return;
+
         if (row == n) {
             ans = Math.max(ans, num);
             return;
