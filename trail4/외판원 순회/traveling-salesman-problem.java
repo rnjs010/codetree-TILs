@@ -19,23 +19,25 @@ public class Main {
             }
         }
 
-        find(0, 0, 0, 0);
+        find(0, 0, 1);
         System.out.print(ans);
     }
 
-    static void find(int depth, int row, int sum, int visit) {
+    static void find(int row, int sum, int visit) {
         if (sum >= ans) return;
 
-        if (depth == n - 1) {
-            if (cost[row][0] == 0) return;
-            ans = Math.min(ans, sum + cost[row][0]);
+        if (visit == (1 << n) - 1) {
+            if (cost[row][0] != 0) {
+                ans = Math.min(ans, sum + cost[row][0]);
+            }
             return;
         }
 
         for (int i = 1; i < n; i++) {
             if (cost[row][i] == 0) continue;
             if ((visit & (1 << i)) != 0) continue;
-            find(depth + 1, i, sum + cost[row][i], visit | (1 << i));
+            
+            find(i, sum + cost[row][i], visit | (1 << i));
         }
     }
 }
