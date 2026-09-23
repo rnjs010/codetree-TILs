@@ -4,40 +4,50 @@ import java.io.*;
 public class Main {
     static int n;
     static int[][] cost;
-    static int ans = Integer.MAX_VALUE;
+    static int[][] dp;
+    static final int INF = 987654321;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
-        
+        n = Integer.parseInt(br.readLine().trim());
+
         cost = new int[n][n];
-        StringTokenizer st;
         for (int i = 0; i < n; i++) {
-            st = new StringTokenizer(br.readLine());
+            StringTokenizer st = new StringTokenizer(br.readLine());
             for (int j = 0; j < n; j++) {
                 cost[i][j] = Integer.parseInt(st.nextToken());
             }
         }
 
-        find(0, 0, 1);
-        System.out.print(ans);
+        dp = new int[n][1 << n];
+        for (int i = 0; i < n; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+
+        int ans = tsp(0, 1);
+        System.out.println(ans);
     }
 
-    static void find(int row, int sum, int visit) {
-        if (sum >= ans) return;
-
+    static int tsp(int cur, int visit) {
         if (visit == (1 << n) - 1) {
-            if (cost[row][0] != 0) {
-                ans = Math.min(ans, sum + cost[row][0]);
-            }
-            return;
+            if (cost[cur][0] == 0) return INF;
+            return cost[cur][0];
         }
 
-        for (int i = 1; i < n; i++) {
-            if (cost[row][i] == 0) continue;
-            if ((visit & (1 << i)) != 0) continue;
-            
-            find(i, sum + cost[row][i], visit | (1 << i));
+        if (dp[cur][visit] != -1) {
+            return dp[cur][visit];
         }
+
+        dp[cur][visit] = INF;
+
+        for (int i = 0; i < n; i++) {
+            if (cost[cur][i] == 0) continue;
+            if ((visit & (1 << i)) != 0) continue;
+
+            int nextCost = cost[cur][i] + tsp(i, visit | (1 << i));
+            dp[cur][visit] = Math.min(dp[cur][visit], nextCost);
+        }
+
+        return dp[cur][visit];
     }
 }
