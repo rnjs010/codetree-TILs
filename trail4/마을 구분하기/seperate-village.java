@@ -22,12 +22,10 @@ public class Main {
         }
 
         visit = new boolean[n][n];
-        int cnt = 0;
         List<Integer> arr = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (grid[i][j] == 1 && !visit[i][j]) {
-                    cnt++;
                     pCnt = 1;
                     visit[i][j] = true;
                     dfs(i, j);
@@ -37,7 +35,7 @@ public class Main {
         }
 
         Collections.sort(arr);
-        System.out.println(cnt);
+        System.out.println(arr.size());
         for (int i = 0; i < arr.size(); i++) {
             System.out.println(arr.get(i));
         }          
