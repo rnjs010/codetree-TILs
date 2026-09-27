@@ -5,7 +5,7 @@ public class Main {
     static int n, k, m;
     static int[][] grid, startPoints;
     static boolean[][] visit;
-    static ArrayList<int[]> rocks;
+    static ArrayList<int[]> rocks = new ArrayList<>();
     static Deque<int[]> dq = new ArrayDeque<>();
     static int cnt = 0, ans = 0;
     static int[] dx = {1, 0, -1, 0}, dy = {0, 1, 0, -1};
@@ -18,7 +18,7 @@ public class Main {
         m = Integer.parseInt(st.nextToken());
 
         grid = new int[n][n];
-        rocks = new ArrayList<>();
+        visit = new boolean[n][n];
         for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < n; j++) {
@@ -42,15 +42,19 @@ public class Main {
 
     static void comb(int d, int idx) {
         if (d == m) {
-            visit = new boolean[n][n];
+            for (int i = 0; i < n; i++) {
+                Arrays.fill(visit[i], false);
+            }
             cnt = 0;
             for (int s = 0; s < k; s++) {
                 int[] start = startPoints[s];
                 if (!visit[start[0]][start[1]]) {
+                    visit[start[0]][start[1]] = true;
+                    dq.offer(start);
                     cnt++;
-                    bfs(start);
                 }
             }
+            bfs();
             ans = Math.max(ans, cnt);
             return;
         }
@@ -64,9 +68,7 @@ public class Main {
         }
     }
 
-    static void bfs(int[] s) {
-        visit[s[0]][s[1]] = true;
-        dq.offer(s);
+    static void bfs() {
         while (!dq.isEmpty()) {
             int[] cur = dq.poll();
 
