@@ -6,7 +6,6 @@ public class Main {
     static int[][] grid;
     static boolean[][] visit;
     static Deque<int[]> dq = new ArrayDeque<>();
-    static Deque<int[]> nextDq = new ArrayDeque<>();
     static int all = 0, sec = 0, cnt = 0;
     static int[] dx = {0, 1, 0, -1}, dy = {1, 0, -1, 0};
 
@@ -28,14 +27,10 @@ public class Main {
         }
 
         visit = new boolean[n][m];
-        visit[0][0] = true;
-        dq.offer(new int[]{0, 0});
         while (all > 0) {
             bfs();
             sec++;
             all -= cnt;
-            dq = nextDq;
-            nextDq = new ArrayDeque<>();
         }
 
         System.out.print(sec + " " + cnt);
@@ -44,6 +39,12 @@ public class Main {
 
     static void bfs() {
         cnt = 0;
+        for(int i = 0; i < n; i++) {
+            Arrays.fill(visit[i], false);
+        }
+
+        visit[0][0] = true;
+        dq.offer(new int[]{0, 0});
         while (!dq.isEmpty()) {
             int[] cur = dq.poll();
             for (int d = 0; d < 4; d++) {
@@ -56,7 +57,6 @@ public class Main {
                     dq.offer(new int[]{nx, ny});
                 } else {
                     grid[nx][ny] = 0;
-                    nextDq.offer(new int[]{nx, ny});
                     cnt++;
                 }
             }
