@@ -4,9 +4,9 @@ import java.io.*;
 public class Main {
     static int n, k, u, d;
     static int[][] grid;
-    static Deque<int[]> dq = new ArrayDeque<>();
     static boolean[][] visit;
     static int ans;
+    static int[] selected; 
     static int[] dx = {1, 0, -1, 0}, dy = {0, 1, 0, -1};
 
     public static void main(String[] args) throws IOException {
@@ -25,6 +25,7 @@ public class Main {
             }
         }
 
+        selected = new int[k];
         comb(0, 0);
         System.out.print(ans);
     }
@@ -35,10 +36,9 @@ public class Main {
             return;
         }
 
-        for (int i = idx; i < n*n; i++) {
-            dq.offer(new int[]{i / n, i % n});
+        for (int i = idx; i < n * n; i++) {
+            selected[depth] = i;
             comb(i + 1, depth + 1);
-            dq.pollLast();
         }
     }
 
@@ -46,20 +46,28 @@ public class Main {
         int cnt = k;
         visit = new boolean[n][n];
         Deque<int[]> bfsDq = new ArrayDeque<>();
-        for (int[] cur: dq) {
-            bfsDq.offer(cur);
-            visit[cur[0]][cur[1]] = true;
+        
+        for (int pos : selected) {
+            int r = pos / n;
+            int c = pos % n;
+            if (!visit[r][c]) {
+                visit[r][c] = true;
+                bfsDq.offer(new int[]{r, c});
+            }
         }
 
         while (!bfsDq.isEmpty()) {
             int[] cur = bfsDq.poll();
             int x = cur[0];
             int y = cur[1];
+            
             for (int dir = 0; dir < 4; dir++) {
                 int nx = x + dx[dir];
                 int ny = y + dy[dir];
+                
                 if (nx < 0 || nx >= n || ny < 0 || ny >= n) continue;
                 if (visit[nx][ny]) continue;
+                
                 int gap = Math.abs(grid[x][y] - grid[nx][ny]);
                 if (gap >= u && gap <= d) {
                     cnt++;
